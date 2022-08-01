@@ -44,5 +44,5 @@ def matrix():
     return render_template('matrix.html', COLOR=color)
 
 if __name__ == "__main__":
-    # app.run(host="0.0.0.0", port=80, debug=True)
+    # app.run(host="0.0.0.0", port=80, debug=True) ## To run across LAN you can acess thought any of the devices by entering your ip followed by port http://192.168.0.###:80
     app.run(debug=True)
