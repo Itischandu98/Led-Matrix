@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Edit Post</title> 
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h2>Button Pressed: {{ButtonPressed}}</h2>
+    <form action="/button" method="post"> <!-- or method="post" -->
+        <input type="submit" value="Click Me" >
+    </form>
+</div>
+{% endblock %}

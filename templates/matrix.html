@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Matrix</title> 
+{% endblock %}
+
+{% block body %}
+<h1><center>Matrix</center></h1>
+
+
+    <form action="/matrix" id="search_form" method="POST">
+        {% for i in range(14,-1,-1) %}
+            {% for j in range(15) %}
+                {% if [i, j]|string in SELECTED %}
+                    <input type="checkbox" class="cbox" value="{{[i,j]}}" name="LED" checked>
+                {% else %}
+                    <input type="checkbox" class="cbox" value="{{[i,j]}}" name="LED">
+                {% endif %}
+            {% endfor%}
+            <br>
+        {% endfor%}
+        <br>
+        <label for="colorpicker">Color Picker:</label>
+        <input type="color" id="colorpicker" value={{COLOR}} name="Color">
+        <br><br>
+        <input type="submit" value="submit"/>
+    </form>
+    
+    <!-- {% if SELECTED %}
+        <p>Selected: {{SELECTED}}</p>
+    {% endif %} -->
+
+{% endblock %}

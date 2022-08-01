@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+<title>Snake Game</title>
+<meta http-equiv="refresh" content="0.5">
+{% endblock %}
+
+{% block body %}
+<form action="/snakegame">
+    <h1 style="text-align: center;">Let's Play Snake Game</h1>
+    <p style="text-align: center;"><a href="/snakegame/up" class="button">^</a></p>
+    <p style="text-align: center;"><a href="/snakegame/left" class="button">&lt;</a>
+    &emsp; &emsp; &emsp; &emsp;<a href="/snakegame/right" class="button">&gt;</a></p>
+    <p style="text-align: center;"><a href="/snakegame/down" class="button">v</a></p>
+</form>
+{% endblock %}
