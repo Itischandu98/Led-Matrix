@@ -9,8 +9,8 @@
 
 
     <form action="/matrix" id="search_form" method="POST">
-        {% for i in range(14,-1,-1) %}
-            {% for j in range(15) %}
+        {% for i in range(15) %}
+            {% for j in range(14,-1,-1) %}
                 {% if [i, j]|string in SELECTED %}
                     <input type="checkbox" class="cbox" value="{{[i,j]}}" name="LED" checked>
                 {% else %}
