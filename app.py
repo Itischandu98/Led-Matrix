@@ -70,6 +70,11 @@ def intialize():
     lrc=[[r,c]]
     chek ='here'
 # intialize()
+def ponginit():
+    global tempr1,tempr2,sl
+    tempr1=7
+    tempr2=7
+    sl=[8,7] #start location
 
 def led(r,c,s=1):  ## To On and Off the leds to red
     if s==0:
@@ -80,6 +85,8 @@ def led(r,c,s=1):  ## To On and Off the leds to red
         pxl.show()
 
 def animation1():
+    pxl.fill((0,0,0))
+    pxl.show()
     for i in range (15):
         for j in range (15):
             pxl[arr[i][j]]=(0,0,255)
@@ -94,6 +101,51 @@ def animation1():
             pxl[arr[14-j][i]]=(0,0,0)
             pxl[arr[j][14-i]]=(0,0,0)
         pxl.show()
+
+def pongpong():
+    global gopong,sl
+    # pxl.fill((0,0,0))
+    # pxl.show()
+    temptime=1.5
+    casev=caseh=1
+    gopong=1
+    print('started')
+    while gopong:
+        pxl[arr[sl[0]][sl[1]]]=(0,255,0)
+        pxl.show()
+        time.sleep(temptime)
+        pxl[arr[sl[0]][sl[1]]]=(0,0,0)
+        pxl.show()
+        if sl[0]>13:
+            casev=-1
+        elif sl[0]<1:
+            casev=+1
+        if sl[1]>13:
+            if sl[0] in [5,7,9]:
+                sl[1]=0
+            else:
+                caseh=-2
+        elif sl[1]<1:
+            temptime=0.8
+            if sl[0] in [5,7,9]:
+                sl[1]=14
+            else:
+                caseh=+2
+        if checkup(sl):
+            print('gameover')
+            animation1()
+            # ponginit()
+            break
+        sl[0]=sl[0]+casev
+        sl[1]=sl[1]+caseh
+   
+def checkup(sl):
+    global tempr1, tempr2
+    print(tempr1,tempr2,sl)
+    if (sl[1]==0 or sl[1]==14) and (sl[0] not in [tempr1,tempr1+1,tempr1-1,tempr2,tempr2+1,tempr2-1]):
+        return(True)
+    else:
+        return(False)
 
 def snakethread(intel):
     global r,c,lrc,chek,rf,cf,flag
@@ -118,6 +170,9 @@ def snakethread(intel):
         elif r>14:
             r=r-15
 
+        pxl[arr[rf][cf]]=(0,255,0)
+        pxl.show()
+
         cr,cc=lrc[-1]        
         if ((len(lrc)>1) and ([r,c] in lrc)):
             flag=1
@@ -141,12 +196,12 @@ def snakethread(intel):
             lrc.append([cr,cc])
             led(cr,cc)
         print(lrc)
-        time.sleep(0.4)
+        time.sleep(0.2)
 
 @app.route('/')
 def home():
-    global go 
-    go=0
+    global go,gopong 
+    go=gopong=0
     pxl.fill((0,0,0))
     pxl.show()
     return render_template('home.html')
@@ -160,21 +215,87 @@ def snake():
 def snakegame(intel):
     global go, chek
     go=0
-    time.sleep(0.5)
+    time.sleep(0.3)
     if chek!=intel:
         go=1
         x=threading.Thread(target=snakethread ,args=(intel,))
         x.start()
     ##function end
     return render_template('snakegame.html')
-    
+
+# @app.route('/debug', methods=['GET'])
+# def functioncheck():
+#     pongpong()
+#     return render_template('debug.html') 
+
+@app.route('/pong', methods=['GET'])
+def pong():
+    ponginit()
+    for i in range(3):
+        pxl[arr[i+tempr1-1][0]]=(255,0,0)
+        pxl[arr[i+tempr2-1][14]]=(0,0,255)
+    pxl.show()
+    y=threading.Thread(target=pongpong)
+    y.start()
+    # pongpong()
+    return render_template('pongplayers.html') 
+
+@app.route('/ponggame/player1/<string:move>', methods=['GET'])
+def ponggame1(move):
+    global arr,tempr1    
+    if move=='left1':
+        tempr1+=1
+    elif move=='right1':
+        tempr1-=1
+    else:
+        tempr1=tempr1
+    if tempr1<2:
+        tempr1=2
+    elif tempr1>13:
+        tempr1=13
+    for j in range(15):
+        pxl[arr[j][0]]=(0,0,0)
+    pxl.show()
+    for i in range(3):
+        pxl[arr[i+tempr1-1][0]]=(255,0,0)
+    pxl.show()
+    time.sleep(0.005)
+    return render_template('pong1.html')
+
+@app.route('/ponggame/player2/<string:move>', methods=['GET'])
+def ponggame2(move):
+    global arr,tempr2
+    if move=='left2':
+        tempr2+=1
+    elif move=='right2':
+        tempr2-=1
+    else:
+        tempr2=tempr2
+    if tempr2<2:
+        tempr2=2
+    elif tempr2>13:
+        tempr2=13   
+    for j in range(15):
+        pxl[arr[j][14]]=(0,0,0)
+    pxl.show()
+    for i in range(3):
+        pxl[arr[i+tempr2-1][14]]=(0,0,255)
+        pxl.show()
+    time.sleep(0.005)
+    return render_template('pong2.html')
+
+
+
 ButtonPressed=0
 @app.route('/button', methods=["GET", "POST"])
 def button():     
     global ButtonPressed
     if request.method == "POST":
         ButtonPressed+=1
-        return render_template("button.html", ButtonPressed = ButtonPressed)
+        if ButtonPressed==5:
+            return redirect('https://www.youtube.com/watch?v=eBGIQ7ZuuiU&ab_channel=YouGotRickRolled/autoplay=1')
+        else:
+            return render_template("button.html", ButtonPressed = ButtonPressed)
     ButtonPressed=0
     return render_template("button.html", ButtonPressed = ButtonPressed)
 
