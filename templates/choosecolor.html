@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Time</title> 
+{% endblock %}
+
+{% block body %}
+    <h1 style="text-align: center;">Time</h1>
+    <form style="text-align: center;" action="/choose" method="post"> <!-- or method="post" -->
+        <label for="colorpicker">Color Picker for the strip:</label>
+        <input type="color" id="colorpicker" value={{COLOR}} name="ColorChoice">
+        <br><br>
+        <p style="text-align: center;"><a href="/flash">Flash</a></p>
+        <p style="text-align: center;"><a href="/pulse">Pulse</a></p>
+        <br><br>
+
+        <input type="submit" value="submit"/>
+    </form>
+{% endblock %}
